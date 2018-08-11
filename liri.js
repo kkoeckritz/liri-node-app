@@ -9,7 +9,7 @@ require("dotenv").config();
 var keys = require("./keys.js");
 console.log("done.")
 
-
+// Twitter mode
 function myTweets() {
     var a_token = null;
     var a_secret = null;
@@ -46,6 +46,7 @@ function spotifyThisSong(name) {
         name = "Ace of Base The Sign";
     }
 
+    // find, output data from Spotify
     spotify.search({ type: 'track', query: name })
         .then(function(response) {
             console.log("____________________");
@@ -60,6 +61,7 @@ function spotifyThisSong(name) {
         });
 }
 
+// OMDB mode
 function movieThis(name) {
     
     // default to "Mr. Nobody"
@@ -67,6 +69,7 @@ function movieThis(name) {
         name = "Mr. Nobody";
     }
 
+    // get, output data from OMDB
     request(`http://omdbapi.com/?t=${name}&y=&plot=short&apikey=${keys.omdb.key}`, function(error, response){
         if (!error && response.statusCode == 200) {
             var movie_title = JSON.parse(response.body).Title;
@@ -95,12 +98,27 @@ function movieThis(name) {
     });
 }
 
+// run inputs from random.txt instead
 function doWhatItSays() {
-    
+
+    console.log("Doing what it says...");
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+        // log any errors to console
+        if (error) {
+          return console.log(error);
+        }
+      
+        // split "paramaters" at comma
+        var cmdArr = data.split(",");
+
+        // call chooseMode again with new params
+        chooseMode(cmdArr[0], cmdArr[1]);
+      });
 }
 
+// determine functionality based on inputs
 function chooseMode(mode, name) {
-    // determine app mode from first parameter
     switch(mode) {
         case "my-tweets":
             myTweets();
@@ -124,6 +142,7 @@ function chooseMode(mode, name) {
     }
 }
 
+// send cmdline args to chooseMode
 var mode = process.argv[2];
 var name = process.argv[3];
-chooseMode(mode, name)
+chooseMode(mode, name);
