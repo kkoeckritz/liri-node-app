@@ -1,7 +1,7 @@
 // link required libs
 var fs = require("fs");
 var request = require("request");
-var Twitter = require("node-twitter-api");
+var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 
 // grab key configs
@@ -10,29 +10,18 @@ var keys = require("./keys.js");
 
 // Twitter mode
 function myTweets() {
-    var a_token = null;
-    var a_secret = null;
-
-    // get new instance of twitter ( THIS MIGHT BE ALL THAT IS NEEDED!!!!!!!!!!!!!!!!!! )
     var twitter = new Twitter(keys.twitter);
 
-    // get request token
-    twitter.getRequestToken(function(error, requestToken, requestTokenSecret, results){
+    var params = {screen_name: 'ucdavis', count: 20};
+
+    twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (error) {
-            logOut(1,"Error getting OAuth request token : " + error);
+            logOut(1, error);
+            return;
         }
-        else {
-            // get access token
-            twitter.getAccessToken(requestToken, requestTokenSecret, oauth_verifier, function(error, accessToken, accessTokenSecret, results) {
-                if (error) {
-                    logOut(1,error);
-                }
-                else {
-                    a_token = accessToken;
-                    a_secret = accessTokenSecret;
-                }
-            });
-        }
+        tweets.forEach(tweet => {
+            logOut(1, `${tweet.text}\n`);
+        });
     });
 }
 
@@ -177,7 +166,7 @@ function logOut(type, text) {
 
     // for output
     else {
-
+    
         // write text to file...
         fs.appendFile("log.txt", `\t${text}\n`, function(err) {
 
