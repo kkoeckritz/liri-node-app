@@ -61,6 +61,7 @@ function spotifyThisSong(name) {
 }
 
 function movieThis(name) {
+    
     // default to "Mr. Nobody"
     if (name == null) {
         name = "Mr. Nobody";
@@ -98,26 +99,31 @@ function doWhatItSays() {
     
 }
 
-// determine app mode from first parameter
+function chooseMode(mode, name) {
+    // determine app mode from first parameter
+    switch(mode) {
+        case "my-tweets":
+            myTweets();
+            break;
+        case "spotify-this-song":
+            spotifyThisSong(name);
+            break;
+        case "movie-this":
+            movieThis(name);
+            break;
+        case "do-what-it-says":
+            doWhatItSays();
+            break;
+        default:
+            console.log("_____usage_____");
+            console.log("'my-tweets'");
+            console.log("'spotify-this-song <song>'");
+            console.log("'movie-this <movie>'");
+            console.log("'do-what-it-says'");
+            console.log("_______________");
+    }
+}
+
 var mode = process.argv[2];
 var name = process.argv[3];
-switch(mode) {
-    case "my-tweets":
-        myTweets();
-        break;
-    case "spotify-this-song":
-        spotifyThisSong(name);
-        break;
-    case "movie-this":
-        movieThis(name);
-        break;
-    case "do-what-it-says":
-        doWhatItSays();
-        break;
-    default:
-        console.log("\n_____usage_____");
-        console.log("'my-tweets'");
-        console.log("'spotify-this-song <song>'");
-        console.log("'movie-this <movie>'");
-        console.log("'do-what-it-says'\n");
-}
+chooseMode(mode, name)

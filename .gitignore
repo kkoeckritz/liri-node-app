@@ -29,3 +29,6 @@ node_modules
 
 # environment vars
 .env
+
+# VS Code configs
+.vscode
